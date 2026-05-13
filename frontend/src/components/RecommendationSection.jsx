@@ -13,7 +13,7 @@ function formatPrice(price) {
   }).format(price)
 }
 
-export default function RecommendationSection({ productId }) {
+export default function RecommendationSection({ productId, refreshKey = 0 }) {
   const [recs, setRecs] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -23,7 +23,7 @@ export default function RecommendationSection({ productId }) {
       .then((data) => setRecs(data.results ?? []))
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [productId])
+  }, [productId, refreshKey])
 
   if (!loading && recs.length === 0) return null
 

@@ -50,3 +50,10 @@ class RecommendationResponse(BaseModel):
     product_id: int
     count: int
     results: list[ProductRecommendation]
+
+
+class ProductFiltersResponse(BaseModel):
+    brands: list[str]
+    categories: list[str]
+    price_min: Optional[float]
+    price_max: Optional[float]

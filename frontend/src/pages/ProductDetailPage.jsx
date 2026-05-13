@@ -37,6 +37,7 @@ export default function ProductDetailPage() {
   const [sentiment, setSentiment] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [recRefresh, setRecRefresh] = useState(0)
 
   useEffect(() => {
     setLoading(true)
@@ -122,8 +123,11 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        <RecommendationSection productId={id} />
-        <ReviewList productId={id} />
+        <RecommendationSection productId={id} refreshKey={recRefresh} />
+        <ReviewList
+          productId={id}
+          onReviewAdded={() => setRecRefresh((prev) => prev + 1)}
+        />
       </div>
     </div>
   )
