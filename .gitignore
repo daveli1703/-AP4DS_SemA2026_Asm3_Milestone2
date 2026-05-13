@@ -1,0 +1,38 @@
+﻿# --- Python / Flask (Backend) ---
+backend/venv/
+backend/.venv/
+backend/env/
+**/__pycache__/
+*.py[cod]
+*$py.class
+backend/.env
+backend/*.log
+backend/instance/
+backend/.pytest_cache/
+
+# --- Node / React (Frontend) ---
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# --- Machine Learning Assets ---
+# Only ignore these if they are massive (>100MB) 
+# or if you want the marker to retrain them
+# *.joblib
+# *.pkl
+
+# --- System & IDEs ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.bak
