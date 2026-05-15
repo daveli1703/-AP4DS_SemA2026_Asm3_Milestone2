@@ -1,0 +1,107 @@
+.page {
+  min-height: calc(100vh - 68px);
+  background: var(--color-surface);
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.bcLink {
+  color: var(--color-text-secondary);
+  transition: color var(--transition);
+}
+
+.bcLink:hover { color: var(--color-accent); }
+
+.bcSep { color: var(--color-border); }
+
+.bcCurrent {
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.heading {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 6px;
+}
+
+.sub {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 32px;
+}
+
+.card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 28px;
+}
+
+.productLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-accent);
+  transition: gap var(--transition);
+}
+
+.productLink svg {
+  width: 15px;
+  height: 15px;
+  transition: transform var(--transition);
+}
+
+.productLink:hover svg { transform: translateX(3px); }
+
+.skeletonTitle, .skeletonBody {
+  border-radius: var(--radius-md);
+  background: linear-gradient(90deg, #f0ece8 25%, #e8e2dd 50%, #f0ece8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.skeletonTitle { height: 36px; width: 60%; margin-bottom: 16px; }
+.skeletonBody { height: 200px; }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.errorText {
+  color: var(--color-text-secondary);
+  margin-bottom: 16px;
+}
+
+.backBtn {
+  padding: 10px 24px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.backBtn:hover {
+  border-color: var(--color-text-primary);
+  color: var(--color-text-primary);
+}

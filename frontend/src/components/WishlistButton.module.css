@@ -1,0 +1,33 @@
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  transition: transform 0.15s ease, background var(--transition);
+}
+
+.btn svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--color-text-muted);
+  transition: fill 0.15s ease, stroke 0.15s ease;
+}
+
+.btn:hover {
+  transform: scale(1.12);
+  background: #fff;
+}
+
+.btn:hover svg {
+  stroke: var(--color-accent);
+}
+
+.btn.saved svg {
+  fill: var(--color-accent);
+  stroke: var(--color-accent);
+}

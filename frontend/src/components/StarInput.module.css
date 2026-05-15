@@ -1,0 +1,28 @@
+.wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.star {
+  font-size: 1.8rem;
+  color: var(--color-border);
+  transition: color 0.12s ease, transform 0.1s ease;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.star.active {
+  color: #d4a017;
+}
+
+.star:hover {
+  transform: scale(1.15);
+}
+
+.label {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-left: 8px;
+  font-weight: 500;
+}
