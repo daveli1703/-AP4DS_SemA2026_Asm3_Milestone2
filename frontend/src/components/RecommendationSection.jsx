@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { api } from '../services/api'
 import styles from './RecommendationSection.module.css'
 
-const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"%3E%3Crect width="200" height="200" fill="%23f2ece4"/%3E%3C/svg%3E'
+const getCosmeticImage = (id) => `https://loremflickr.com/200/200/cosmetics,makeup,beauty?lock=${id}`
 
 function formatPrice(price) {
   return new Intl.NumberFormat('en-US', {
@@ -13,7 +13,7 @@ function formatPrice(price) {
   }).format(price)
 }
 
-export default function RecommendationSection({ productId, refreshKey = 0 }) {
+export default function RecommendationSection({ productId }) {
   const [recs, setRecs] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -23,7 +23,7 @@ export default function RecommendationSection({ productId, refreshKey = 0 }) {
       .then((data) => setRecs(data.results ?? []))
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [productId, refreshKey])
+  }, [productId])
 
   if (!loading && recs.length === 0) return null
 
@@ -40,11 +40,11 @@ export default function RecommendationSection({ productId, refreshKey = 0 }) {
               <Link key={item.id} to={`/products/${item.id}`} className={styles.card}>
                 <div className={styles.imageWrap}>
                   <img
-                    src={item.image_url || PLACEHOLDER}
+                    src={getCosmeticImage(item.id)}
                     alt={item.name}
                     className={styles.image}
                     loading="lazy"
-                    onError={(e) => { e.currentTarget.src = PLACEHOLDER }}
+                    onError={(e) => { e.currentTarget.src = getCosmeticImage(item.id + 100) }}
                   />
                   <span className={styles.similarity}>
                     {Math.round(item.similarity_score * 100)}% match

@@ -5,7 +5,7 @@ import ReviewList from '../components/ReviewList'
 import RecommendationSection from '../components/RecommendationSection'
 import styles from './ProductDetailPage.module.css'
 
-const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"%3E%3Crect width="600" height="600" fill="%23f2ece4"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="18" fill="%239e9793"%3ENo image available%3C/text%3E%3C/svg%3E'
+const getCosmeticImage = (id) => `https://loremflickr.com/600/600/cosmetics,makeup,beauty?lock=${id}`
 
 function StarRating({ rating }) {
   const full = Math.floor(rating)
@@ -37,7 +37,6 @@ export default function ProductDetailPage() {
   const [sentiment, setSentiment] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [recRefresh, setRecRefresh] = useState(0)
 
   useEffect(() => {
     setLoading(true)
@@ -83,10 +82,10 @@ export default function ProductDetailPage() {
           <div className={styles.imageCol}>
             <div className={styles.imageWrap}>
               <img
-                src={image_url || PLACEHOLDER}
+                src={getCosmeticImage(id)}
                 alt={name}
                 className={styles.image}
-                onError={(e) => { e.currentTarget.src = PLACEHOLDER }}
+                onError={(e) => { e.currentTarget.src = getCosmeticImage(Number(id) + 100) }}
               />
             </div>
           </div>
@@ -123,11 +122,8 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        <RecommendationSection productId={id} refreshKey={recRefresh} />
-        <ReviewList
-          productId={id}
-          onReviewAdded={() => setRecRefresh((prev) => prev + 1)}
-        />
+        <RecommendationSection productId={id} />
+        <ReviewList productId={id} />
       </div>
     </div>
   )

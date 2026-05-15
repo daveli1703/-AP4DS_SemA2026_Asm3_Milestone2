@@ -31,7 +31,7 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        <Link to="/" className={styles.logo}>
+        <Link to="/" className={styles.logo} onClick={() => window.scrollTo(0, 0)}>
           <span className={styles.logoGlow}>GL</span>
           <span className={styles.logoBar}>Ō</span>
           <span className={styles.logoGlow}>W</span>

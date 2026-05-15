@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import WishlistButton from './WishlistButton'
 import styles from './ProductCard.module.css'
 
-const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"%3E%3Crect width="400" height="400" fill="%23f2ece4"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="14" fill="%239e9793"%3ENo image%3C/text%3E%3C/svg%3E'
+const getCosmeticImage = (id) => `https://loremflickr.com/400/400/cosmetics,makeup,beauty?lock=${id}`
 
 function formatPrice(price) {
   return new Intl.NumberFormat('en-US', {
@@ -19,11 +19,11 @@ export default function ProductCard({ product, saved, onToggleWishlist }) {
     <Link to={`/products/${id}`} className={styles.card}>
       <div className={styles.imageWrap}>
         <img
-          src={image_url || PLACEHOLDER}
+          src={getCosmeticImage(id)}
           alt={name}
           className={styles.image}
           loading="lazy"
-          onError={(e) => { e.currentTarget.src = PLACEHOLDER }}
+          onError={(e) => { e.currentTarget.src = getCosmeticImage(id + 100) }}
         />
         {category && category !== 'General' && (
           <span className={styles.categoryBadge}>{category}</span>

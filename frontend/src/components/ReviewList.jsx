@@ -1,62 +1,24 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import ReviewCard from './ReviewCard'
 import ReviewForm from './ReviewForm'
 import { api } from '../services/api'
 import styles from './ReviewList.module.css'
 
-const PAGE_SIZE = 6
-
-export default function ReviewList({ productId, onReviewAdded }) {
+export default function ReviewList({ productId }) {
   const [reviews, setReviews] = useState([])
   const [loading, setLoading] = useState(true)
-  const [loadingMore, setLoadingMore] = useState(false)
   const [showForm, setShowForm] = useState(false)
-  const [sort, setSort] = useState('newest')
-  const [skip, setSkip] = useState(0)
-  const [hasMore, setHasMore] = useState(true)
-
-  const loadPage = useCallback(async (nextSkip, replace = false) => {
-    try {
-      const data = await api.getReviews(productId, {
-        sort,
-        skip: nextSkip,
-        limit: PAGE_SIZE,
-      })
-      if (replace) {
-        setReviews(data)
-      } else {
-        setReviews((prev) => [...prev, ...data])
-      }
-      setHasMore(data.length === PAGE_SIZE)
-      setSkip(nextSkip + data.length)
-    } catch {
-      if (replace) setReviews([])
-      setHasMore(false)
-    } finally {
-      if (replace) setLoading(false)
-    }
-  }, [productId, sort])
 
   useEffect(() => {
-    setLoading(true)
-    setReviews([])
-    setSkip(0)
-    setHasMore(true)
-    loadPage(0, true)
-  }, [productId, sort, loadPage])
+    api.getReviews(productId)
+      .then(setReviews)
+      .catch(() => {})
+      .finally(() => setLoading(false))
+  }, [productId])
 
   function handleReviewAdded(newReview) {
+    setReviews((prev) => [newReview, ...prev])
     setShowForm(false)
-    setLoading(true)
-    loadPage(0, true)
-    onReviewAdded?.(newReview)
-  }
-
-  async function handleLoadMore() {
-    if (loadingMore || !hasMore) return
-    setLoadingMore(true)
-    await loadPage(skip, false)
-    setLoadingMore(false)
   }
 
   const avgRating = reviews.length
@@ -79,26 +41,11 @@ export default function ReviewList({ productId, onReviewAdded }) {
             </span>
           )}
         </div>
-        <div className={styles.controls}>
-          <label className={styles.sortWrap}>
-            <span className={styles.sortLabel}>Sort</span>
-            <select
-              className={styles.sortSelect}
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-            >
-              <option value="newest">Newest first</option>
-              <option value="oldest">Oldest first</option>
-              <option value="rating_desc">Highest rating</option>
-              <option value="rating_asc">Lowest rating</option>
-            </select>
-          </label>
-          {!showForm && (
-            <button className={styles.writeBtn} onClick={() => setShowForm(true)}>
-              Write a review
-            </button>
-          )}
-        </div>
+        {!showForm && (
+          <button className={styles.writeBtn} onClick={() => setShowForm(true)}>
+            Write a review
+          </button>
+        )}
       </div>
 
       {showForm && (
@@ -127,18 +74,6 @@ export default function ReviewList({ productId, onReviewAdded }) {
           {reviews.map((review) => (
             <ReviewCard key={review.id} review={review} />
           ))}
-        </div>
-      )}
-
-      {!loading && reviews.length > 0 && hasMore && !showForm && (
-        <div className={styles.loadMoreWrap}>
-          <button
-            className={styles.loadMoreBtn}
-            onClick={handleLoadMore}
-            disabled={loadingMore}
-          >
-            {loadingMore ? 'Loading…' : 'Load more reviews'}
-          </button>
         </div>
       )}
     </section>
