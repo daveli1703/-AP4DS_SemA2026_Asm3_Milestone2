@@ -2,12 +2,12 @@
 
 ## Team
 
-- Name: <ADD_NAME>
-- Student ID: <ADD_ID>
-- Name: <ADD_NAME>
-- Student ID: <ADD_ID>
-- Name: <ADD_NAME>
-- Student ID: <ADD_ID>
+| Student Name | Student ID |
+|---|---|
+| Ly Chi Hung | s4046014 |
+| Le Nguyen Kiet | s4043909 |
+| Tran Vu Nhat Tin | s3870729 |
+| Phan Hoang Vu | s4192517 |
 
 ## Demo Video
 
@@ -59,5 +59,3 @@ Frontend: http://localhost:3000
 - Demo video (.mp4) link
 - README with team details and run instructions
 - Any large data files linked via OneDrive if needed
-
-> If you need a README.txt, copy this file and rename it accordingly before submission.

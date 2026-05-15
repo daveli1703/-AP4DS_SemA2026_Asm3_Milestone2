@@ -5,9 +5,9 @@ import styles from './ProductCard.module.css'
 const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"%3E%3Crect width="400" height="400" fill="%23f2ece4"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="14" fill="%239e9793"%3ENo image%3C/text%3E%3C/svg%3E'
 
 function formatPrice(price) {
-  return new Intl.NumberFormat('en-IN', {
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'INR',
+    currency: 'USD',
     maximumFractionDigits: 0,
   }).format(price)
 }
