@@ -6,6 +6,7 @@ import { useWishlist } from '../hooks/useWishlist'
 import styles from './HomePage.module.css'
 
 const PAGE_SIZE = 20
+const EMPTY_FILTERS = { brand: '', category: '', min_price: '', max_price: '' }
 
 export default function HomePage() {
   const [searchParams] = useSearchParams()
@@ -20,10 +21,18 @@ export default function HomePage() {
   const [error, setError] = useState(null)
   const [skip, setSkip] = useState(0)
   const [hasMore, setHasMore] = useState(true)
+  const [filters, setFilters] = useState(EMPTY_FILTERS)
+  const [activeFilters, setActiveFilters] = useState({})
+  const [filterOptions, setFilterOptions] = useState({
+    brands: [],
+    categories: [],
+    price_min: null,
+    price_max: null,
+  })
 
-  const fetchProducts = useCallback(async (nextSkip) => {
+  const fetchProducts = useCallback(async (nextSkip, filterParams) => {
     try {
-      const data = await api.getProducts(nextSkip, PAGE_SIZE)
+      const data = await api.getProducts(nextSkip, PAGE_SIZE, filterParams)
       if (nextSkip === 0) {
         setProducts(data)
       } else {
@@ -36,14 +45,20 @@ export default function HomePage() {
     }
   }, [])
 
-  const fetchSearch = useCallback(async (q) => {
+  const fetchSearch = useCallback(async (q, filterParams) => {
     try {
-      const data = await api.searchProducts(q)
+      const data = await api.searchProducts(q, filterParams)
       setSearchResult(data)
       setError(null)
     } catch (err) {
       setError(err.status === 422 ? 'Please enter a search term.' : 'Search failed. Make sure the backend is running on port 8000.')
     }
+  }, [])
+
+  useEffect(() => {
+    api.getProductFilters()
+      .then(setFilterOptions)
+      .catch(() => {})
   }, [])
 
   useEffect(() => {
@@ -57,23 +72,54 @@ export default function HomePage() {
 
     const run = async () => {
       if (query) {
-        await fetchSearch(query)
+        await fetchSearch(query, activeFilters)
       } else {
-        await fetchProducts(0)
+        await fetchProducts(0, activeFilters)
       }
       setLoading(false)
     }
     run()
-  }, [query, fetchSearch, fetchProducts])
+  }, [query, activeFilters, fetchSearch, fetchProducts])
 
   async function handleLoadMore() {
     setLoadingMore(true)
-    await fetchProducts(skip)
+    await fetchProducts(skip, activeFilters)
     setLoadingMore(false)
+  }
+
+  function normalizeFilters(next) {
+    let min = next.min_price !== '' ? Number(next.min_price) : undefined
+    let max = next.max_price !== '' ? Number(next.max_price) : undefined
+    if (Number.isFinite(min) && Number.isFinite(max) && min > max) {
+      const swap = min
+      min = max
+      max = swap
+    }
+    return {
+      brand: next.brand || undefined,
+      category: next.category || undefined,
+      min_price: Number.isFinite(min) ? min : undefined,
+      max_price: Number.isFinite(max) ? max : undefined,
+    }
+  }
+
+  function handleApplyFilters() {
+    setActiveFilters(normalizeFilters(filters))
+  }
+
+  function handleResetFilters() {
+    setFilters(EMPTY_FILTERS)
+    setActiveFilters({})
   }
 
   const isSearch = Boolean(query)
   const isSavedTab = tab === 'saved' && !isSearch
+  const hasActiveFilters = Boolean(
+    activeFilters.brand ||
+    activeFilters.category ||
+    activeFilters.min_price !== undefined ||
+    activeFilters.max_price !== undefined
+  )
 
   let displayProducts
   if (isSavedTab) {
@@ -139,6 +185,78 @@ export default function HomePage() {
               )}
             </button>
           </div>
+        )}
+
+        {!isSavedTab && (
+          <section className={styles.filterPanel}>
+            <div className={styles.filterHeader}>
+              <h3 className={styles.filterTitle}>Filter products</h3>
+              {hasActiveFilters && (
+                <button className={styles.filterLink} onClick={handleResetFilters}>
+                  Clear filters
+                </button>
+              )}
+            </div>
+            <div className={styles.filterGrid}>
+              <label className={styles.filterGroup}>
+                <span className={styles.filterLabel}>Brand</span>
+                <select
+                  className={styles.filterSelect}
+                  value={filters.brand}
+                  onChange={(e) => setFilters((prev) => ({ ...prev, brand: e.target.value }))}
+                >
+                  <option value="">All brands</option>
+                  {filterOptions.brands.map((brand) => (
+                    <option key={brand} value={brand}>{brand}</option>
+                  ))}
+                </select>
+              </label>
+
+              <label className={styles.filterGroup}>
+                <span className={styles.filterLabel}>Category</span>
+                <select
+                  className={styles.filterSelect}
+                  value={filters.category}
+                  onChange={(e) => setFilters((prev) => ({ ...prev, category: e.target.value }))}
+                >
+                  <option value="">All categories</option>
+                  {filterOptions.categories.map((category) => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
+                </select>
+              </label>
+
+              <label className={styles.filterGroup}>
+                <span className={styles.filterLabel}>Min price</span>
+                <input
+                  className={styles.filterInput}
+                  type="number"
+                  min="0"
+                  value={filters.min_price}
+                  onChange={(e) => setFilters((prev) => ({ ...prev, min_price: e.target.value }))}
+                />
+              </label>
+
+              <label className={styles.filterGroup}>
+                <span className={styles.filterLabel}>Max price</span>
+                <input
+                  className={styles.filterInput}
+                  type="number"
+                  min="0"
+                  value={filters.max_price}
+                  onChange={(e) => setFilters((prev) => ({ ...prev, max_price: e.target.value }))}
+                />
+              </label>
+            </div>
+            <div className={styles.filterActions}>
+              <button className={styles.filterBtn} onClick={handleResetFilters}>
+                Reset
+              </button>
+              <button className={styles.filterBtnPrimary} onClick={handleApplyFilters}>
+                Apply filters
+              </button>
+            </div>
+          </section>
         )}
 
         {error && (

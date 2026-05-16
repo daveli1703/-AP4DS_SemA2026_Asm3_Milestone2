@@ -10,21 +10,35 @@ async function request(path, options) {
   return res.json()
 }
 
+function buildQuery(params) {
+  const qs = new URLSearchParams()
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === '') return
+    qs.append(key, value)
+  })
+  const out = qs.toString()
+  return out ? `?${out}` : ''
+}
+
 export const api = {
-  getProducts(skip = 0, limit = 20) {
-    return request(`/products?skip=${skip}&limit=${limit}`)
+  getProducts(skip = 0, limit = 20, filters = {}) {
+    return request(`/products${buildQuery({ skip, limit, ...filters })}`)
   },
 
-  searchProducts(query) {
-    return request(`/products/search?q=${encodeURIComponent(query)}`)
+  searchProducts(query, filters = {}) {
+    return request(`/products/search${buildQuery({ q: query, ...filters })}`)
+  },
+
+  getProductFilters() {
+    return request('/products/filters')
   },
 
   getProduct(id) {
     return request(`/products/${id}`)
   },
 
-  getReviews(id) {
-    return request(`/products/${id}/reviews`)
+  getReviews(id, options = {}) {
+    return request(`/products/${id}/reviews${buildQuery(options)}`)
   },
 
   getRecommendations(id, topK = 5) {
