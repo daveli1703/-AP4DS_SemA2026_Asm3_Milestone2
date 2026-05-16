@@ -8,12 +8,10 @@ from sqlalchemy.orm import Session
 
 from app.config import settings
 from app.ml.predictor import buy_predictor
-from app.ml.recommender import recommendation_index
 from app.models.review import Review
 from app.repositories.product_repository import ProductRepository
 from app.repositories.review_repository import ReviewRepository
 from app.schemas.review import ReviewCreate
-from app.services.recommendation_service import RecommendationService
 
 
 class ReviewService:
@@ -28,14 +26,8 @@ class ReviewService:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Review {review_id} not found")
         return review
 
-    def get_reviews_for_product(
-        self,
-        product_id: int,
-        sort: str = "newest",
-        skip: int = 0,
-        limit: int = 10,
-    ) -> list[Review]:
-        return self.repo.get_by_product_page(product_id, sort, skip, limit)
+    def get_reviews_for_product(self, product_id: int) -> list[Review]:
+        return self.repo.get_by_product(product_id)
 
     def create_review(self, product_id: int, data: ReviewCreate) -> Review:
         product = self.product_repo.get_by_id(product_id)
@@ -82,24 +74,13 @@ class ReviewService:
         )
         review = self.repo.create(review)
         self._append_to_csv(review)
-        self._refresh_recommendations()
         return review
 
     def override_label(self, review_id: int, recommended: bool) -> Review:
         review = self.get_review(review_id)
         review.recommended = recommended
         review.user_overridden = True
-        review = self.repo.save(review)
-        self._refresh_recommendations()
-        return review
-
-    def _refresh_recommendations(self) -> None:
-        try:
-            products = self.product_repo.get_all_products()
-            stats = RecommendationService.compute_review_stats(self.db)
-            recommendation_index.build(products, stats)
-        except Exception as exc:
-            print(f"[ReviewService] Recommendation refresh failed: {exc}")
+        return self.repo.save(review)
 
     def _append_to_csv(self, review: Review) -> None:
         path = settings.reviews_csv_path

@@ -2,13 +2,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from app.database.session import get_db
-from app.schemas.product import (
-    ProductFiltersResponse,
-    ProductRead,
-    ProductSummary,
-    RecommendationResponse,
-    SearchResponse,
-)
+from app.schemas.product import ProductFiltersResponse, ProductRead, ProductSummary, RecommendationResponse, SearchResponse
 from app.schemas.review import ReviewCreate, ReviewRead
 from app.schemas.sentiment import SentimentSummaryResponse
 from app.services.product_service import ProductService
@@ -17,6 +11,11 @@ from app.services.review_service import ReviewService
 from app.services.sentiment_service import SentimentService
 
 router = APIRouter(prefix="/products", tags=["products"])
+
+
+@router.get("/filters", response_model=ProductFiltersResponse)
+def get_product_filters(db: Session = Depends(get_db)):
+    return ProductService(db).get_filters()
 
 
 @router.get("/search", response_model=SearchResponse)
@@ -29,11 +28,6 @@ def search_products(
     db: Session = Depends(get_db),
 ):
     return ProductService(db).search(q, brand, category, min_price, max_price)
-
-
-@router.get("/filters", response_model=ProductFiltersResponse)
-def get_product_filters(db: Session = Depends(get_db)):
-    return ProductService(db).get_filters()
 
 
 @router.get("", response_model=list[ProductSummary])
@@ -55,14 +49,8 @@ def get_product(product_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/{product_id}/reviews", response_model=list[ReviewRead])
-def get_product_reviews(
-    product_id: int,
-    sort: str = "newest",
-    skip: int = Query(0, ge=0),
-    limit: int = Query(10, ge=1, le=100),
-    db: Session = Depends(get_db),
-):
-    return ReviewService(db).get_reviews_for_product(product_id, sort, skip, limit)
+def get_product_reviews(product_id: int, db: Session = Depends(get_db)):
+    return ReviewService(db).get_reviews_for_product(product_id)
 
 
 @router.post("/{product_id}/reviews", response_model=ReviewRead, status_code=201)

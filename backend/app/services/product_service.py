@@ -11,14 +11,7 @@ class ProductService:
     def __init__(self, db: Session):
         self.repo = ProductRepository(db)
 
-    def search(
-        self,
-        query: str,
-        brand: str | None = None,
-        category: str | None = None,
-        min_price: float | None = None,
-        max_price: float | None = None,
-    ) -> SearchResponse:
+    def search(self, query: str, brand=None, category=None, min_price=None, max_price=None) -> SearchResponse:
         ranked = product_search_engine.search(query)
         if not ranked:
             return SearchResponse(count=0, results=[])
@@ -54,29 +47,19 @@ class ProductService:
             price_max=price_max,
         )
 
+    @staticmethod
+    def _apply_filters(products, brand, category, min_price, max_price):
+        if not any([brand, category, min_price is not None, max_price is not None]):
+            return products
+        filtered = []
+        for p in products:
+            if brand and p.brand != brand: continue
+            if category and p.category != category: continue
+            if min_price is not None and p.price < min_price: continue
+            if max_price is not None and p.price > max_price: continue
+            filtered.append(p)
+        return filtered
+
     def create(self, data: ProductCreate) -> Product:
         product = Product(**data.model_dump())
         return self.repo.create(product)
-
-    @staticmethod
-    def _apply_filters(
-        products: list[Product],
-        brand: str | None,
-        category: str | None,
-        min_price: float | None,
-        max_price: float | None,
-    ) -> list[Product]:
-        if not any([brand, category, min_price is not None, max_price is not None]):
-            return products
-        filtered: list[Product] = []
-        for p in products:
-            if brand and p.brand != brand:
-                continue
-            if category and p.category != category:
-                continue
-            if min_price is not None and p.price < min_price:
-                continue
-            if max_price is not None and p.price > max_price:
-                continue
-            filtered.append(p)
-        return filtered
