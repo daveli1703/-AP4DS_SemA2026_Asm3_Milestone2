@@ -15,25 +15,22 @@ function ProductPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    // Fetch Product Details
-    setReviewText('');           // Clears the text area
-    setPredictedLabel(null);     // Hides the AI prediction box
-    setUserOverride('');         // Resets the user's manual choice
+    setReviewText('');           
+    setPredictedLabel(null);     
+    setUserOverride('');         
     fetch(`/api/products/${id}`)
       .then(res => res.json())
       .then(data => setProduct(data));
 
-    // Fetch Recommendations (Task 3)
     fetch(`/api/products/${id}/recommendations`)
       .then(res => res.json())
       .then(data => setSimilarItems(data));
   }, [id]);
 
-// 1. Consolidated Prediction Logic
+
 const handleReviewBlur = async (e) => {
   const currentText = e.target.value.trim();
   
-  // If user clears the text, reset the AI UI
   if (currentText.length <= 10) {
     setPredictedLabel(null);
     return;
@@ -45,7 +42,7 @@ const handleReviewBlur = async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
         review: currentText,
-        productId: id // Required for Fusion Logic (Rating + Price)
+        productId: id
       })
     });
     
@@ -57,18 +54,17 @@ const handleReviewBlur = async (e) => {
   }
 };
 
-// 2. Robust Submission Logic
 const submitReview = async (e) => {
   e.preventDefault();
   
-  // Ensure we don't submit if userOverride wasn't set yet
+  
   const finalLabel = userOverride || predictedLabel || 'Buy';
 
   const reviewData = { 
     text: reviewText, 
     finalLabel: finalLabel, 
     productId: id,
-    timestamp: new Date().toISOString() // Good for sorting later
+    timestamp: new Date().toISOString() 
   };
 
   try {
@@ -169,7 +165,7 @@ const submitReview = async (e) => {
   <textarea
     value={reviewText}
     onChange={(e) => setReviewText(e.target.value)}
-    onBlur={handleReviewBlur} // The AI magic happens here
+    onBlur={handleReviewBlur} 
     placeholder="What did you think of this product?"
     required
   />
@@ -206,7 +202,6 @@ const submitReview = async (e) => {
     {similarItems.map(item => (
       <Link to={`/product/${item.id}`} key={item.id} className="similar-card-link">
         <div className="similar-card">
-          {/* FIX: Use item.imageUrl and item.brand instead of product */}
           <div className="small-placeholder">
             {item.imageUrl ? (
               <img 
@@ -216,7 +211,6 @@ const submitReview = async (e) => {
               />
             ) : (
               <div className="fallback-avatar">
-                {/* FIX: Use item.brand for the initial */}
                 {item.brand ? item.brand.charAt(0) : 'P'}
               </div>
             )}

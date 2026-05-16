@@ -106,7 +106,7 @@
   justify-content: space-between;
   font-weight: 500;
   cursor: pointer;
-  margin-bottom: -1px; /* Overlap borders */
+  margin-bottom: -1px; 
 }
 
 /* Luxury Product Card */
@@ -118,7 +118,7 @@
   text-align: center;
   display: flex;
   flex-direction: column;
-  min-height: 380px; /* Reduced overall height */
+  min-height: 380px; 
   transition: transform 0.2s ease;
 }
 
@@ -169,9 +169,8 @@
 
 .product-grid-container .grid {
   display: grid;
-  /* Reduced from 280px to 220px to fit 4-5 items per row on desktop */
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
-  gap: 15px; /* Tighter gap */
+  gap: 15px; 
   padding: 10px;
 }
 
@@ -194,12 +193,12 @@
 }
 
 .filter-sidebar {
-  width: 220px; /* Narrower sidebar creates more room for the grid */
+  width: 220px; 
   flex-shrink: 0;
 }
 
 .product-grid-container {
-  flex-grow: 1; /* Grid takes up all remaining space */
+  flex-grow: 1; 
 }
 
 .search-banner {
@@ -259,7 +258,7 @@
 }
 
 .visual-area {
-  height: 120px; /* Matching your smaller grid request */
+  height: 120px; 
   background: #ffffff;
   display: flex;
   align-items: center;
@@ -271,9 +270,7 @@
     max-width: 90%;
     max-height: 80%;
     object-fit: contain;
-    /* Prevents stretching logos like L'Oreal or NYX */
     filter: grayscale(10%);
-    /* Subtle professional touch */
     transition: filter 0.3s ease;
 }
 .luxury-card:hover .brand-logo-fit {

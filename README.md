@@ -11,7 +11,7 @@
 
 ## Demo Video
 
-- Link: <ADD_DEMO_VIDEO_URL>
+- Link: https://rmiteduau-my.sharepoint.com/:v:/g/personal/s3870729_rmit_edu_vn/IQAO3antUx4iTbZ-LnanDxQxAe8J5CqSRe22WBAY5yzhx4c?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=qcndAd
 
 ## Project Overview
 
@@ -52,10 +52,3 @@ Frontend: http://localhost:3000
 
 - The backend loads pre-trained ML models from backend/ml/models.
 - If you need to reset data, delete backend/beauty_shop.db and re-run seed.py.
-
-## Submission Checklist
-
-- Source code and interface
-- Demo video (.mp4) link
-- README with team details and run instructions
-- Any large data files linked via OneDrive if needed

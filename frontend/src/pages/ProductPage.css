@@ -39,7 +39,7 @@
 }
 
 .breadcrumb-brand-link:hover {
-  color: #ef476f; /* Highlight with your theme color */
+  color: #ef476f; 
   text-decoration: underline;
 }
 
@@ -50,6 +50,6 @@
     transition: color 0.2s ease;
 }
 .breadcrumb-home:hover {
-    color: #ef476f; /* Highlight with your theme color */
+    color: #ef476f; 
     text-decoration: underline;
 }
